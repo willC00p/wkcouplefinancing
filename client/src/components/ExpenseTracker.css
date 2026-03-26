@@ -1,0 +1,114 @@
+.expense-tracker {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tracker-header {
+  margin-bottom: 2rem;
+}
+
+.expense-tracker h2 {
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.tracker-subtitle {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.expense-tracker .error-message {
+  background: #fef2f2;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #ef4444;
+}
+
+.expense-tracker .no-data {
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .expense-tracker {
+    padding: 1.5rem;
+  }
+
+  .expense-tracker h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .expense-tracker {
+    padding: 1rem;
+    border-radius: 10px;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .tracker-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .expense-tracker h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .tracker-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .expense-tracker .error-message {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+
+  .expense-tracker .no-data {
+    padding: 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .expense-tracker {
+    padding: 0.75rem;
+  }
+
+  .tracker-header {
+    margin-bottom: 1rem;
+  }
+
+  .expense-tracker h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .tracker-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .expense-tracker .error-message {
+    padding: 0.5rem;
+    margin-bottom: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+
+  .expense-tracker .no-data {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}

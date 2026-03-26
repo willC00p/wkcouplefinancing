@@ -1,0 +1,381 @@
+.contribution-table-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.contribution-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.contribution-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.contribution-header {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.25s ease;
+}
+
+.contribution-header:hover {
+  background: #f3f4f6;
+}
+
+.contribution-main {
+  flex: 1;
+}
+
+.contribution-main h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.contribution-meta {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.contribution-desc {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.contribution-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.25s ease;
+  padding: 0.5rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete:hover {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.expand-icon {
+  color: #6b7280;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: color 0.25s ease;
+}
+
+.contribution-card:hover .expand-icon {
+  color: #3b82f6;
+}
+
+.contribution-details {
+  padding: 1.5rem;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.contribution-details h5 {
+  color: #1a1a1a;
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.participants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.participant-card {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 3px solid #d1d5db;
+  transition: all 0.25s ease;
+}
+
+.participant-card.paid {
+  border-left-color: #10b981;
+  background: #f0fdf4;
+}
+
+.participant-card.unpaid {
+  border-left-color: #ef4444;
+  background: #fef2f2;
+}
+
+.participant-card.partial {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.participant-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.participant-name {
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 0.4rem 0;
+}
+
+.participant-amount {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0 0 0.2rem 0;
+}
+
+.participant-remaining {
+  color: #ef4444;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.participant-status {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.btn-edit-participant {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.25s ease;
+  padding: 0.5rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-edit-participant:hover {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* ===== EDIT PARTICIPANT STYLES ===== */
+.edit-participant {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.edit-participant input.disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.edit-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.edit-fields input,
+.edit-fields select {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+  color: #1a1a1a;
+  font-family: inherit;
+  transition: all 0.25s ease;
+}
+
+.edit-fields input:focus,
+.edit-fields select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.btn-save,
+.btn-cancel {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.25s ease;
+  padding: 0.5rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-save:hover {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.btn-cancel:hover {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+@media (max-width: 1024px) {
+  .contribution-table-container {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .contribution-table-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .contribution-header {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .contribution-actions {
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 0;
+  }
+
+  .contribution-details {
+    padding: 1rem;
+  }
+
+  .participant-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .participant-status {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .edit-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .contribution-main h4 {
+    font-size: 1rem;
+  }
+
+  .contribution-meta {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contribution-table-container {
+    gap: 0.75rem;
+  }
+
+  .contribution-card {
+    border-radius: 8px;
+  }
+
+  .contribution-header {
+    padding: 0.75rem;
+  }
+
+  .contribution-details {
+    padding: 0.75rem;
+  }
+
+  .contribution-main h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .contribution-meta {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .participant-card {
+    padding: 0.75rem;
+  }
+
+  .participant-name {
+    font-size: 0.95rem;
+  }
+
+  .participant-amount,
+  .participant-remaining {
+    font-size: 0.85rem;
+  }
+
+  .edit-participant {
+    gap: 0.75rem;
+  }
+
+  .edit-fields {
+    gap: 0.5rem;
+  }
+
+  .edit-actions {
+    gap: 0.25rem;
+  }
+}

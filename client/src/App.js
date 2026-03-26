@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { AiOutlineDashboard, AiOutlineCreditCard, AiOutlineTeam } from 'react-icons/ai';
-import { BiPlane } from 'react-icons/bi';
+import { FaPlane } from 'react-icons/fa';
 import Dashboard from './components/Dashboard';
 import ExpenseTracker from './components/ExpenseTracker';
 import ContributionTracker from './components/ContributionTracker';
@@ -50,7 +50,7 @@ function App() {
               onClick={() => setCurrentPage('trips')}
               title="Trip Expenses"
             >
-              <BiPlane size={20} />
+              <FaPlane size={20} />
               <span>Trips</span>
             </button>
           </nav>

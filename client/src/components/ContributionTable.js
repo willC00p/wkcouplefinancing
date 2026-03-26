@@ -11,9 +11,9 @@ const ContributionTable = ({ contributions, onUpdate, onDelete }) => {
   const [editingParticipantData, setEditingParticipantData] = useState(null);
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-PH', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'PHP'
     }).format(value);
   };
 
@@ -93,7 +93,7 @@ const ContributionTable = ({ contributions, onUpdate, onDelete }) => {
           <div className="contribution-header" onClick={() => setExpandedId(expandedId === contrib.id ? null : contrib.id)}>
             <div className="contribution-main">
               <h4>{contrib.payer} paid {formatCurrency(contrib.total_amount)}</h4>
-              <p className="contribution-meta">{contrib.number_of_people} people • ${(contrib.split_amount).toFixed(2)} per person</p>
+              <p className="contribution-meta">{contrib.number_of_people} people • ₱{(contrib.split_amount).toFixed(2)} per person</p>
               {contrib.description && <p className="contribution-desc">{contrib.description}</p>}
             </div>
             <div className="contribution-actions">

@@ -108,7 +108,7 @@ const ContributionForm = ({ onContributionAdded }) => {
 
   return (
     <div className="contribution-form">
-      <h3>Add New Contribution</h3>
+      <h3>Add New ABONO</h3>
       <form onSubmit={handleSubmit}>
         <div className="form-row">
           <div className="form-group">
@@ -141,7 +141,7 @@ const ContributionForm = ({ onContributionAdded }) => {
             <label>Split Amount (Auto)</label>
             <input
               type="text"
-              value={`$${splitAmount}`}
+              value={`₱${splitAmount}`}
               disabled
               className="disabled-input"
             />
@@ -170,7 +170,7 @@ const ContributionForm = ({ onContributionAdded }) => {
                 placeholder="Participant name"
                 required
               />
-              <span className="split-label">${splitAmount}</span>
+              <span className="split-label">₱{splitAmount}</span>
               {formData.participants.length > 1 && (
                 <button
                   type="button"

@@ -62,6 +62,20 @@ const initializeDatabase = () => {
       CREATE TABLE IF NOT EXISTS trips (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         trip_name TEXT NOT NULL,
+        start_date TEXT,
+        end_date TEXT,
+        destination TEXT,
+        budget REAL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Trip Expenses table
+    db.run(`
+      CREATE TABLE IF NOT EXISTS trip_expenses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        trip_id INTEGER NOT NULL,
         particulars TEXT NOT NULL,
         amount REAL NOT NULL,
         classification TEXT NOT NULL,
@@ -72,7 +86,8 @@ const initializeDatabase = () => {
         receipt_url TEXT,
         reference_number TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE
       )
     `);
 

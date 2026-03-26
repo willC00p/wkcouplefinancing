@@ -46,9 +46,9 @@ const Dashboard = ({ refreshTrigger }) => {
   if (!summary) return <div className="dashboard"><p>No data available</p></div>;
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-PH', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'PHP'
     }).format(value);
   };
 

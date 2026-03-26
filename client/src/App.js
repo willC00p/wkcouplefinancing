@@ -35,7 +35,7 @@ function App() {
               title="Expenses"
             >
               <AiOutlineCreditCard size={20} />
-              <span>Expenses</span>
+              <span>UTANG</span>
             </button>
             <button 
               className={currentPage === 'contributions' ? 'nav-button active' : 'nav-button'}
@@ -43,7 +43,7 @@ function App() {
               title="Contributions"
             >
               <AiOutlineTeam size={20} />
-              <span>Contributions</span>
+              <span>ABONO</span>
             </button>
             <button 
               className={currentPage === 'trips' ? 'nav-button active' : 'nav-button'}

@@ -93,7 +93,7 @@ const ExpenseForm = ({ onExpenseAdded }) => {
 
   return (
     <div className="expense-form">
-      <h3>Add New Expense</h3>
+      <h3>Add New UTANG</h3>
       <form onSubmit={handleSubmit}>
         <div className="form-row">
           <div className="form-group">
@@ -146,7 +146,7 @@ const ExpenseForm = ({ onExpenseAdded }) => {
 
         <div className="form-row">
           <div className="form-group">
-            <label>Paid By *</label>
+            <label>Pay to*</label>
             <select
               name="pay_to"
               value={formData.pay_to}

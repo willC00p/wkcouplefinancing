@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import TripForm from './TripForm';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import CreateTripForm from './CreateTripForm';
+import TripExpenseForm from './TripExpenseForm';
 import TripTable from './TripTable';
-import API_URL from '../config';
 import './TripTracker.css';
 
-const TripTracker = () => {
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+function TripTracker() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [summary, setSummary] = useState({
-    totalAmount: 0,
-    byClassification: {},
-    byPayer: {}
-  });
+  const [showCreateTripForm, setShowCreateTripForm] = useState(false);
+  const [showExpenseForm, setShowExpenseForm] = useState(false);
+  const [selectedTripForExpense, setSelectedTripForExpense] = useState(null);
+
+  useEffect(() => {
+    fetchTrips();
+  }, []);
 
   const fetchTrips = async () => {
     setLoading(true);
@@ -20,109 +25,110 @@ const TripTracker = () => {
       if (!response.ok) throw new Error('Failed to fetch trips');
       const data = await response.json();
       setTrips(data || []);
-      calculateSummary(data || []);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching trips:', err);
+      setTrips([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const calculateSummary = (tripList) => {
-    const byClassification = {};
-    const byPayer = {};
-    let totalAmount = 0;
-
-    tripList.forEach((trip) => {
-      totalAmount += trip.amount;
-
-      // By classification
-      if (!byClassification[trip.classification]) {
-        byClassification[trip.classification] = 0;
-      }
-      byClassification[trip.classification] += trip.amount;
-
-      // By payer
-      if (!byPayer[trip.payer]) {
-        byPayer[trip.payer] = 0;
-      }
-      byPayer[trip.payer] += trip.amount;
-    });
-
-    setSummary({
-      totalAmount,
-      byClassification,
-      byPayer
-    });
+  const handleTripCreated = (newTrip) => {
+    setTrips(prev => [newTrip, ...prev]);
+    setShowCreateTripForm(false);
   };
 
-  useEffect(() => {
-    fetchTrips();
-  }, []);
-
-  const handleTripDeleted = () => {
-    fetchTrips();
+  const handleAddExpenseClick = (trip) => {
+    setSelectedTripForExpense(trip);
+    setShowExpenseForm(true);
   };
+
+  const handleExpenseAdded = async (newExpense) => {
+    // Refresh all trips to get updated data
+    fetchTrips();
+    setShowExpenseForm(false);
+  };
+
+  const handleTripDeleted = (tripId) => {
+    setTrips(prev => prev.filter(t => t.id !== tripId));
+  };
+
+  const calculateStats = () => {
+    const totalTrips = trips.length;
+    const totalBudget = trips.reduce((sum, t) => sum + (t.budget || 0), 0);
+    const totalSpent = trips.reduce((sum, t) => sum + (t.total_spent || 0), 0);
+    const totalExpenses = trips.reduce((sum, t) => sum + (t.expense_count || 0), 0);
+
+    return { totalTrips, totalBudget, totalSpent, totalExpenses };
+  };
+
+  const stats = calculateStats();
 
   return (
-    <div className="trip-tracker-container">
-      <div className="trip-header">
+    <div className="trip-tracker">
+      <div className="tracker-header">
         <h2>Trip Expenses</h2>
-        <div className="trip-summary">
-          <div className="summary-card">
-            <span className="summary-label">Total Trip Expenses</span>
-            <span className="summary-amount">₱{summary.totalAmount.toFixed(2)}</span>
-          </div>
-          <div className="summary-card">
-            <span className="summary-label">Expenses Logged</span>
-            <span className="summary-amount">{trips.length}</span>
-          </div>
+        <button
+          className="btn-create-trip"
+          onClick={() => setShowCreateTripForm(true)}
+        >
+          + New Trip
+        </button>
+      </div>
+
+      <div className="trip-stats">
+        <div className="stat-card">
+          <div className="stat-label">Total Trips</div>
+          <div className="stat-value">{stats.totalTrips}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Total Expenses</div>
+          <div className="stat-value">{stats.totalExpenses}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Budget</div>
+          <div className="stat-value">₱{stats.totalBudget.toFixed(2)}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Spent</div>
+          <div className="stat-value">₱{stats.totalSpent.toFixed(2)}</div>
         </div>
       </div>
 
-      <TripForm onTripAdded={fetchTrips} />
-
       {loading ? (
-        <div className="loading">Loading trip expenses...</div>
+        <div className="loading">
+          <AiOutlineLoading3Quarters className="spinner" size={40} />
+          <p>Loading trips...</p>
+        </div>
       ) : trips.length === 0 ? (
         <div className="empty-state">
-          <p>No trip expenses yet. Add one to get started!</p>
+          <p>No trips created yet. Create one to get started!</p>
         </div>
       ) : (
-        <>
-          <TripTable trips={trips} onTripDeleted={handleTripDeleted} />
-          
-          {Object.keys(summary.byClassification).length > 0 && (
-            <div className="summary-section">
-              <div className="summary-box">
-                <h4>By Classification</h4>
-                <div className="classification-list">
-                  {Object.entries(summary.byClassification).map(([cls, amount]) => (
-                    <div key={cls} className="classification-item">
-                      <span>{cls.charAt(0).toUpperCase() + cls.slice(1)}</span>
-                      <span className="amount">₱{amount.toFixed(2)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+        <TripTable
+          trips={trips}
+          onAddExpense={handleAddExpenseClick}
+          onTripDeleted={handleTripDeleted}
+          refreshTrips={fetchTrips}
+        />
+      )}
 
-              <div className="summary-box">
-                <h4>By Payer</h4>
-                <div className="payer-list">
-                  {Object.entries(summary.byPayer).map(([payer, amount]) => (
-                    <div key={payer} className="payer-item">
-                      <span>{payer}</span>
-                      <span className="amount">₱{amount.toFixed(2)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </>
+      {showCreateTripForm && (
+        <CreateTripForm
+          onTripCreated={handleTripCreated}
+          onClose={() => setShowCreateTripForm(false)}
+        />
+      )}
+
+      {showExpenseForm && selectedTripForExpense && (
+        <TripExpenseForm
+          tripId={selectedTripForExpense.id}
+          onExpenseAdded={handleExpenseAdded}
+          onClose={() => setShowExpenseForm(false)}
+        />
       )}
     </div>
   );
-};
+}
 
 export default TripTracker;

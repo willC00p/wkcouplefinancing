@@ -57,6 +57,25 @@ const initializeDatabase = () => {
       )
     `);
 
+    // Trips table
+    db.run(`
+      CREATE TABLE IF NOT EXISTS trips (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        trip_name TEXT NOT NULL,
+        particulars TEXT NOT NULL,
+        amount REAL NOT NULL,
+        classification TEXT NOT NULL,
+        mode_of_payment TEXT NOT NULL,
+        bank_name TEXT,
+        e_wallet_name TEXT,
+        payer TEXT NOT NULL,
+        receipt_url TEXT,
+        reference_number TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     console.log('Database schema initialized');
   });
 };

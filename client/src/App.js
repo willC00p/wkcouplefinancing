@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import './App.css';
 import { AiOutlineDashboard, AiOutlineCreditCard, AiOutlineTeam } from 'react-icons/ai';
+import { BiPlane } from 'react-icons/bi';
 import Dashboard from './components/Dashboard';
 import ExpenseTracker from './components/ExpenseTracker';
 import ContributionTracker from './components/ContributionTracker';
+import TripTracker from './components/TripTracker';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -43,6 +45,14 @@ function App() {
               <AiOutlineTeam size={20} />
               <span>Contributions</span>
             </button>
+            <button 
+              className={currentPage === 'trips' ? 'nav-button active' : 'nav-button'}
+              onClick={() => setCurrentPage('trips')}
+              title="Trip Expenses"
+            >
+              <BiPlane size={20} />
+              <span>Trips</span>
+            </button>
           </nav>
         </div>
       </header>
@@ -54,6 +64,9 @@ function App() {
         )}
         {currentPage === 'contributions' && (
           <ContributionTracker onRefresh={handleRefresh} />
+        )}
+        {currentPage === 'trips' && (
+          <TripTracker />
         )}
       </main>
 

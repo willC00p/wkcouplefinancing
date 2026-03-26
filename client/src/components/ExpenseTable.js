@@ -4,10 +4,14 @@ import { BiSave, BiX } from 'react-icons/bi';
 import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 import { BsCheckCircle, BsClockHistory, BsExclamationCircle } from 'react-icons/bs';
 import API_URL from '../config';
+import PartialPayModal from './PartialPayModal';
 
 const ExpenseTable = ({ expenses, onUpdate, onDelete }) => {
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState(null);
+  const [partialPayModalOpen, setPartialPayModalOpen] = useState(false);
+  const [selectedExpenseForPayment, setSelectedExpenseForPayment] = useState(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -58,6 +62,46 @@ const ExpenseTable = ({ expenses, onUpdate, onDelete }) => {
       } catch (err) {
         alert(`Error: ${err.message}`);
       }
+    }
+  };
+
+  const handleOpenPartialPayModal = (expense) => {
+    setSelectedExpenseForPayment(expense);
+    setPartialPayModalOpen(true);
+  };
+
+  const handleClosePartialPayModal = () => {
+    setPartialPayModalOpen(false);
+    setSelectedExpenseForPayment(null);
+  };
+
+  const handleConfirmPartialPayment = async (paymentAmount) => {
+    setPaymentLoading(true);
+    try {
+      const newPartialAmount = (selectedExpenseForPayment.partial_amount_paid || 0) + paymentAmount;
+      const totalAmount = selectedExpenseForPayment.total_amount;
+      const newStatus = newPartialAmount >= totalAmount ? 'paid' : 'partial';
+
+      const response = await fetch(`${API_URL}/api/expenses/${selectedExpenseForPayment.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...selectedExpenseForPayment,
+          status: newStatus,
+          partial_amount_paid: newPartialAmount
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to update payment');
+
+      handleClosePartialPayModal();
+      onUpdate();
+    } catch (err) {
+      alert(`Error: ${err.message}`);
+    } finally {
+      setPaymentLoading(false);
     }
   };
 
@@ -195,7 +239,16 @@ const ExpenseTable = ({ expenses, onUpdate, onDelete }) => {
                     step="0.01"
                   />
                 ) : (
-                  formatCurrency(expense.partial_amount_paid || 0)
+                  <div className="partial-pay-cell">
+                    <span className="partial-amount">{formatCurrency(expense.partial_amount_paid || 0)} / {formatCurrency(expense.total_amount)}</span>
+                    <button 
+                      className="btn-partial-pay" 
+                      onClick={() => handleOpenPartialPayModal(expense)}
+                      title="Make Partial Payment"
+                    >
+                      Pay
+                    </button>
+                  </div>
                 )}
               </td>
               <td data-label="Actions" className="actions-cell">
@@ -210,6 +263,9 @@ const ExpenseTable = ({ expenses, onUpdate, onDelete }) => {
                   </>
                 ) : (
                   <>
+                    <button className="btn-partial-pay" onClick={() => handleOpenPartialPayModal(expense)} title="Make Partial Payment">
+                      💰
+                    </button>
                     <button className="btn-edit" onClick={() => handleEdit(expense)} title="Edit">
                       <AiOutlineEdit size={16} />
                     </button>
@@ -329,7 +385,7 @@ const ExpenseTable = ({ expenses, onUpdate, onDelete }) => {
                 </div>
                 <div className="card-row">
                   <span className="card-label">Partial Paid:</span>
-                  <span className="card-value">{formatCurrency(expense.partial_amount_paid || 0)}</span>
+                  <span className="card-value">{formatCurrency(expense.partial_amount_paid || 0)} / {formatCurrency(expense.total_amount)}</span>
                 </div>
               </div>
             )}
@@ -348,6 +404,10 @@ const ExpenseTable = ({ expenses, onUpdate, onDelete }) => {
                 </>
               ) : (
                 <>
+                  <button className="btn-partial-pay" onClick={() => handleOpenPartialPayModal(expense)} title="Make Partial Payment">
+                    <span>💰</span>
+                    <span>Pay</span>
+                  </button>
                   <button className="btn-edit" onClick={() => handleEdit(expense)} title="Edit">
                     <AiOutlineEdit size={16} />
                     <span>Edit</span>
@@ -362,6 +422,14 @@ const ExpenseTable = ({ expenses, onUpdate, onDelete }) => {
           </div>
         ))}
       </div>
+
+      <PartialPayModal
+        isOpen={partialPayModalOpen}
+        expense={selectedExpenseForPayment}
+        onClose={handleClosePartialPayModal}
+        onConfirm={handleConfirmPartialPayment}
+        loading={paymentLoading}
+      />
     </div>
   );
 };

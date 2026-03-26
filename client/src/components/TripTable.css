@@ -1,0 +1,211 @@
+.trip-table-container {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 32px;
+}
+
+.trip-table-wrapper {
+  display: block;
+  overflow-x: auto;
+}
+
+.trip-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.trip-table thead {
+  background: #f3f4f6;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.trip-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.trip-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.25s ease;
+}
+
+.trip-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.trip-table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.trip-row .amount {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.payment-mode {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.trip-details-popup {
+  font-size: 12px;
+}
+
+.trip-details-popup p {
+  margin: 0 0 4px 0;
+  color: #6b7280;
+}
+
+.receipt-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.25s ease;
+}
+
+.receipt-link:hover {
+  color: #2563eb;
+}
+
+.btn-delete {
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+.btn-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile Card View */
+.trip-cards {
+  display: none;
+}
+
+.trip-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.card-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.card-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.card-row .label {
+  font-weight: 600;
+  color: #6b7280;
+  margin-right: 8px;
+}
+
+.card-row .value {
+  color: #1a1a1a;
+  text-align: right;
+  flex: 1;
+}
+
+.card-row .badge {
+  margin-left: auto;
+}
+
+.card-footer {
+  display: flex;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.card-footer .btn-delete {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .trip-table-wrapper {
+    display: none;
+  }
+
+  .trip-cards {
+    display: block;
+  }
+
+  .trip-table-container {
+    box-shadow: none;
+    background: transparent;
+  }
+}

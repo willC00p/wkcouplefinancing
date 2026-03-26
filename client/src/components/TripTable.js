@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { BiDownload } from 'react-icons/bi';
+import API_URL from '../config';
 import './TripTable.css';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function TripTable({ trips, onAddExpense, onTripDeleted, refreshTrips }) {
   const [expandedTripId, setExpandedTripId] = useState(null);

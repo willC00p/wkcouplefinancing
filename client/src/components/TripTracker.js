@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import API_URL from '../config';
 import CreateTripForm from './CreateTripForm';
 import TripExpenseForm from './TripExpenseForm';
 import TripTable from './TripTable';
 import './TripTracker.css';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function TripTracker() {
   const [trips, setTrips] = useState([]);

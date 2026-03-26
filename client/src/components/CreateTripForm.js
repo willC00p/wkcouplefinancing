@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import API_URL from '../config';
 import './CreateTripForm.css';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function CreateTripForm({ onTripCreated, onClose }) {
   const [formData, setFormData] = useState({

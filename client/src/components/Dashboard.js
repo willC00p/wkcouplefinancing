@@ -319,6 +319,59 @@ const Dashboard = ({ refreshTrigger }) => {
         </div>
       </div>
 
+      {/* Trip Expenses Analytics */}
+      {summary.trips && summary.trips.total > 0 && (
+        <div className="section">
+          <h3>✈️ Trip Expenses</h3>
+          <div className="status-cards">
+            <div className="status-card">
+              <div className="status-icon"><FiCheckCircle size={20} /></div>
+              <div className="status-content">
+                <p className="status-label">Total Trips</p>
+                <p className="status-value">{summary.trips.total}</p>
+                <p className="status-amount">{summary.trips.totalExpenses} expenses</p>
+              </div>
+            </div>
+            <div className="status-card">
+              <div className="status-icon"><FiClock size={20} /></div>
+              <div className="status-content">
+                <p className="status-label">Total Spent</p>
+                <p className="status-value">{formatCurrency(summary.trips.totalSpent)}</p>
+                <p className="status-amount">{summary.trips.totalBudget > 0 ? `Budget: ${formatCurrency(summary.trips.totalBudget)}` : 'No budget set'}</p>
+              </div>
+            </div>
+          </div>
+          
+          {Object.keys(summary.trips.byClassification).length > 0 && (
+            <div className="trip-breakdown">
+              <h4>Expenses by Category</h4>
+              <div className="breakdown-list">
+                {Object.entries(summary.trips.byClassification).map(([classification, amount]) => (
+                  <div key={classification} className="breakdown-item">
+                    <span className="classification">{classification.charAt(0).toUpperCase() + classification.slice(1)}</span>
+                    <span className="amount">{formatCurrency(amount)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {Object.keys(summary.trips.byPayer).length > 0 && (
+            <div className="trip-breakdown">
+              <h4>Paid By</h4>
+              <div className="breakdown-list">
+                {Object.entries(summary.trips.byPayer).map(([payer, amount]) => (
+                  <div key={payer} className="breakdown-item">
+                    <span className="payer">{payer}</span>
+                    <span className="amount">{formatCurrency(amount)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Outstanding Transactions */}
       {summary.transactions.length > 0 && (
         <div className="section">

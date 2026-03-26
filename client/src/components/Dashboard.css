@@ -665,8 +665,69 @@
     font-size: 0.9rem;
   }
 
-  .loading {
-    padding: 1.5rem;
-    font-size: 0.9rem;
+.trip-breakdown {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.trip-breakdown h4 {
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+}
+
+.breakdown-item .classification,
+.breakdown-item .payer {
+  font-weight: 500;
+  color: #374151;
+  text-transform: capitalize;
+}
+
+.breakdown-item .amount {
+  font-weight: 700;
+  color: #10b981;
+}
+
+@media (max-width: 768px) {
+  .trip-breakdown {
+    margin-top: 1rem;
+    padding: 0.75rem;
+  }
+
+  .trip-breakdown h4 {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .breakdown-list {
+    gap: 0.5rem;
+  }
+
+  .breakdown-item {
+    padding: 0.5rem;
+    font-size: 0.85rem;
   }
 }

@@ -25,6 +25,31 @@ router.get('/summary', async (req, res) => {
     const totalContributionUnpaid = unpaidContributions.reduce((sum, p) => sum + (p.amount_due - p.amount_paid), 0);
     const totalContributionPaid = paidContributions.reduce((sum, p) => sum + p.amount_paid, 0);
 
+    // Get trip statistics
+    const trips = await dbAll('SELECT * FROM trips');
+    const tripExpenses = await dbAll('SELECT * FROM trip_expenses');
+    
+    const totalTripBudget = trips.reduce((sum, t) => sum + (t.budget || 0), 0);
+    const totalTripSpent = tripExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+    
+    // Calculate trip expenses by classification
+    const tripsByClassification = {};
+    tripExpenses.forEach(e => {
+      if (!tripsByClassification[e.classification]) {
+        tripsByClassification[e.classification] = 0;
+      }
+      tripsByClassification[e.classification] += e.amount;
+    });
+
+    // Calculate who paid most for trips
+    const tripsByPayer = {};
+    tripExpenses.forEach(e => {
+      if (!tripsByPayer[e.payer]) {
+        tripsByPayer[e.payer] = 0;
+      }
+      tripsByPayer[e.payer] += e.amount;
+    });
+
     // Calculate who owes whom
     const allTransactions = [];
 
@@ -73,10 +98,19 @@ router.get('/summary', async (req, res) => {
         totalUnpaidAmount: totalContributionUnpaid,
         totalPaidAmount: totalContributionPaid
       },
+      trips: {
+        total: trips.length,
+        totalExpenses: tripExpenses.length,
+        totalBudget: totalTripBudget,
+        totalSpent: totalTripSpent,
+        byClassification: tripsByClassification,
+        byPayer: tripsByPayer
+      },
       transactions: allTransactions,
       overallSummary: {
         totalExpenses: expenses.reduce((sum, e) => sum + e.total_amount, 0),
         totalContributions: contributions.reduce((sum, c) => sum + c.total_amount, 0),
+        totalTrips: totalTripSpent,
         totalOutstanding: totalUnpaid + totalPartial + totalContributionUnpaid
       }
     });

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { dbRun, dbGet, dbAll } = require('../database');
 
-// GET all trips with expense summaries
+// GET all trips with expense summaries and nested expenses
 router.get('/', async (req, res) => {
   try {
     const trips = await dbAll(`
@@ -16,6 +16,16 @@ router.get('/', async (req, res) => {
       GROUP BY t.id
       ORDER BY t.created_at DESC
     `);
+    
+    // Fetch expenses for each trip
+    for (let trip of trips) {
+      const expenses = await dbAll(
+        'SELECT * FROM trip_expenses WHERE trip_id = ? ORDER BY created_at DESC',
+        [trip.id]
+      );
+      trip.expenses = expenses;
+    }
+    
     res.json(trips);
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -336,6 +336,175 @@
   cursor: not-allowed;
 }
 
+/* Expense Visualizations */
+.expense-visualizations {
+  padding: 1.5rem;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+.visualization-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.visualization-item {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.visualization-item h5 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.pie-chart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.breakdown-table {
+  overflow-y: auto;
+  max-height: 350px;
+}
+
+.breakdown-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f3f4f6;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.breakdown-row:hover {
+  background: #e5e7eb;
+}
+
+.breakdown-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.breakdown-count {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.breakdown-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: right;
+}
+
+.breakdown-percentage {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #667eea;
+  min-width: 50px;
+}
+
+.breakdown-amount {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1f2937;
+  min-width: 100px;
+}
+
+.payer-breakdown {
+  grid-column: 1 / -1;
+}
+
+.payer-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.payer-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 120px;
+  gap: 1rem;
+  align-items: center;
+}
+
+.payer-name {
+  font-weight: 600;
+  color: #1f2937;
+  text-align: left;
+}
+
+.payer-bar-container {
+  background: #e5e7eb;
+  border-radius: 8px;
+  height: 24px;
+  overflow: hidden;
+}
+
+.payer-bar {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.3s ease;
+}
+
+.payer-amount {
+  font-weight: 600;
+  color: #1f2937;
+  text-align: right;
+  min-width: 100px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .visualization-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .payer-row {
+    grid-template-columns: 80px 1fr 80px;
+    gap: 0.5rem;
+  }
+
+  .payer-name {
+    font-size: 0.9rem;
+  }
+
+  .payer-amount {
+    font-size: 0.9rem;
+    min-width: auto;
+  }
+
+  .breakdown-percentage {
+    font-size: 0.9rem;
+    min-width: auto;
+  }
+
+  .breakdown-amount {
+    font-size: 0.85rem;
+    min-width: auto;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .trip-card-header {

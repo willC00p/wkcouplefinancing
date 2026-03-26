@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { BiDownload } from 'react-icons/bi';
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import API_URL from '../config';
 import './TripTable.css';
 
@@ -74,6 +75,46 @@ function TripTable({ trips, onAddExpense, onTripDeleted, refreshTrips }) {
     };
   };
 
+  const getClassificationBreakdown = (expenses) => {
+    const breakdown = {};
+    const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    
+    expenses.forEach((exp) => {
+      if (!breakdown[exp.classification]) {
+        breakdown[exp.classification] = { amount: 0, count: 0 };
+      }
+      breakdown[exp.classification].amount += exp.amount;
+      breakdown[exp.classification].count += 1;
+    });
+
+    return Object.entries(breakdown)
+      .map(([classification, data]) => ({
+        name: classification.charAt(0).toUpperCase() + classification.slice(1),
+        value: data.amount,
+        percentage: ((data.amount / total) * 100).toFixed(1),
+        count: data.count,
+        color: getClassificationColor(classification)
+      }))
+      .sort((a, b) => b.value - a.value);
+  };
+
+  const getPayerBreakdown = (expenses) => {
+    const breakdown = {};
+    expenses.forEach((exp) => {
+      if (!breakdown[exp.payer]) {
+        breakdown[exp.payer] = 0;
+      }
+      breakdown[exp.payer] += exp.amount;
+    });
+
+    return Object.entries(breakdown)
+      .map(([payer, amount]) => ({
+        name: payer,
+        value: amount
+      }))
+      .sort((a, b) => b.value - a.value);
+  };
+
   return (
     <div className="trip-table-container">
       {trips.map((trip) => {
@@ -144,50 +185,133 @@ function TripTable({ trips, onAddExpense, onTripDeleted, refreshTrips }) {
                     <p>No expenses added yet. Click "Add Expense" to get started!</p>
                   </div>
                 ) : (
-                  <div className="expenses-list">
-                    {expenses.map((expense) => (
-                      <div key={expense.id} className="expense-item">
-                        <div className="expense-left">
-                          <span
-                            className="classification-badge"
-                            style={{ backgroundColor: getClassificationColor(expense.classification) }}
-                          >
-                            {expense.classification}
-                          </span>
-                          <div className="expense-details">
-                            <p className="particulars">{expense.particulars}</p>
-                            <p className="payer">Paid by: {expense.payer}</p>
-                            {expense.mode_of_payment !== 'cash' && (
-                              <p className="payment-type">
-                                {expense.mode_of_payment === 'bank_transfer' && `Bank: ${expense.bank_name}`}
-                                {expense.mode_of_payment === 'e_wallet' && `E-Wallet: ${expense.e_wallet_name}`}
-                                {expense.reference_number && ` (Ref: ${expense.reference_number})`}
-                              </p>
-                            )}
-                          </div>
+                  <>
+                    {/* Visualization Section */}
+                    <div className="expense-visualizations">
+                      <div className="visualization-row">
+                        {/* Classification Breakdown Pie Chart */}
+                        <div className="visualization-item pie-chart">
+                          <h5>Breakdown by Category</h5>
+                          <ResponsiveContainer width="100%" height={250}>
+                            <PieChart>
+                              <Pie
+                                data={getClassificationBreakdown(expenses)}
+                                dataKey="value"
+                                nameKey="name"
+                                cx="50%"
+                                cy="50%"
+                                outerRadius={80}
+                                label={({ percentage }) => `${percentage}%`}
+                              >
+                                {getClassificationBreakdown(expenses).map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={entry.color} />
+                                ))}
+                              </Pie>
+                              <Tooltip 
+                                formatter={(value) => `₱${value.toFixed(2)}`}
+                                contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px' }}
+                              />
+                            </PieChart>
+                          </ResponsiveContainer>
                         </div>
 
-                        <div className="expense-right">
-                          <span className="amount">₱{expense.amount.toFixed(2)}</span>
-                          <div className="expense-actions">
-                            {expense.receipt_url && (
-                              <a href={expense.receipt_url} target="_blank" rel="noopener noreferrer" className="btn-receipt" title="View receipt">
-                                <BiDownload size={16} />
-                              </a>
-                            )}
-                            <button
-                              className="btn-delete-expense"
-                              onClick={() => handleDeleteExpense(expense.id)}
-                              disabled={deletingExpenseId === expense.id}
-                              title="Delete expense"
-                            >
-                              <AiOutlineDelete size={16} />
-                            </button>
+                        {/* Classification Breakdown Table */}
+                        <div className="visualization-item breakdown-table">
+                          <h5>Category Breakdown</h5>
+                          <div className="breakdown-items">
+                            {getClassificationBreakdown(expenses).map((item, idx) => (
+                              <div key={idx} className="breakdown-row">
+                                <div className="breakdown-left">
+                                  <span 
+                                    className="classification-badge" 
+                                    style={{ backgroundColor: item.color }}
+                                  >
+                                    {item.name}
+                                  </span>
+                                  <span className="breakdown-count">({item.count} item{item.count !== 1 ? 's' : ''})</span>
+                                </div>
+                                <div className="breakdown-right">
+                                  <span className="breakdown-percentage">{item.percentage}%</span>
+                                  <span className="breakdown-amount">₱{item.value.toFixed(2)}</span>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
+
+                      {/* Payer Breakdown */}
+                      <div className="visualization-row">
+                        <div className="visualization-item payer-breakdown">
+                          <h5>Breakdown by Payer</h5>
+                          <div className="payer-items">
+                            {getPayerBreakdown(expenses).map((item, idx) => (
+                              <div key={idx} className="payer-row">
+                                <span className="payer-name">{item.name}</span>
+                                <div className="payer-bar-container">
+                                  <div 
+                                    className="payer-bar"
+                                    style={{ 
+                                      width: `${(item.value / trip.total_spent) * 100}%`,
+                                      backgroundColor: '#667eea'
+                                    }}
+                                  ></div>
+                                </div>
+                                <span className="payer-amount">₱{item.value.toFixed(2)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Expenses List */}
+                    <div className="expenses-list">
+                      <h5 style={{ marginTop: '20px', marginBottom: '10px' }}>All Expenses</h5>
+                      {expenses.map((expense) => (
+                        <div key={expense.id} className="expense-item">
+                          <div className="expense-left">
+                            <span
+                              className="classification-badge"
+                              style={{ backgroundColor: getClassificationColor(expense.classification) }}
+                            >
+                              {expense.classification}
+                            </span>
+                            <div className="expense-details">
+                              <p className="particulars">{expense.particulars}</p>
+                              <p className="payer">Paid by: {expense.payer}</p>
+                              {expense.mode_of_payment !== 'cash' && (
+                                <p className="payment-type">
+                                  {expense.mode_of_payment === 'bank_transfer' && `Bank: ${expense.bank_name}`}
+                                  {expense.mode_of_payment === 'e_wallet' && `E-Wallet: ${expense.e_wallet_name}`}
+                                  {expense.reference_number && ` (Ref: ${expense.reference_number})`}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="expense-right">
+                            <span className="amount">₱{expense.amount.toFixed(2)}</span>
+                            <div className="expense-actions">
+                              {expense.receipt_url && (
+                                <a href={expense.receipt_url} target="_blank" rel="noopener noreferrer" className="btn-receipt" title="View receipt">
+                                  <BiDownload size={16} />
+                                </a>
+                              )}
+                              <button
+                                className="btn-delete-expense"
+                                onClick={() => handleDeleteExpense(expense.id)}
+                                disabled={deletingExpenseId === expense.id}
+                                title="Delete expense"
+                              >
+                                <AiOutlineDelete size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             )}

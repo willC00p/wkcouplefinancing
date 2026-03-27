@@ -1,0 +1,438 @@
+.debt-table-container {
+  width: 100%;
+}
+
+/* ===== DESKTOP TABLE VIEW ===== */
+.debt-table.desktop-view {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.debt-table thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.debt-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #374151;
+}
+
+.debt-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  color: #1a1a1a;
+}
+
+.debt-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.debt-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.debt-table tbody tr.row-paid {
+  background-color: #f0fdf4;
+}
+
+.debt-table tbody tr.row-partial {
+  background-color: #fffbf0;
+}
+
+.debt-table tbody tr.row-unpaid {
+  background-color: #fef2f2;
+}
+
+.debt-table input,
+.debt-table select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+  color: #1a1a1a;
+  font-family: inherit;
+}
+
+.debt-table input:focus,
+.debt-table select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.debt-status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.debt-status-badge.status-paid {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.debt-status-badge.status-partial {
+  background: #fffbf0;
+  color: #92400e;
+}
+
+.debt-status-badge.status-unpaid {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.debt-actions-cell {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.debt-btn-edit,
+.debt-btn-delete,
+.debt-btn-save,
+.debt-btn-cancel,
+.debt-btn-partial-pay {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.25s ease;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.debt-btn-edit:hover {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.debt-btn-delete:hover {
+  background: #fecaca;
+  color: #7f1d1d;
+}
+
+.debt-btn-partial-pay:hover {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.debt-btn-save:hover {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.debt-btn-cancel:hover {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.debt-overdue {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.debt-partial-pay-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.debt-partial-amount {
+  font-size: 0.9rem;
+  color: #4b5563;
+  flex: 1;
+}
+
+/* ===== MOBILE CARD VIEW ===== */
+.debt-cards {
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.debt-cards.mobile-view {
+  display: none;
+}
+
+.debt-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #d1d5db;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.debt-card:active {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.debt-card.status-paid {
+  border-left-color: #10b981;
+  background: #f0fdf4;
+}
+
+.debt-card.status-partial {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.debt-card.status-unpaid {
+  border-left-color: #ef4444;
+  background: #fef2f2;
+}
+
+.debt-card-header {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.debt-card-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  flex: 1;
+  word-break: break-word;
+}
+
+.debt-card-body {
+  padding: 1rem;
+}
+
+.debt-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.debt-card-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.debt-card-label {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.debt-card-value {
+  color: #1a1a1a;
+  text-align: right;
+  flex: 1;
+  margin-left: 1rem;
+}
+
+.debt-card-value.amount {
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.debt-card-value.overdue {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.debt-card-edit-form {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.debt-card-edit-form .debt-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.debt-card-edit-form label {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 0.9rem;
+}
+
+.debt-card-edit-form input,
+.debt-card-edit-form select {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  color: #1a1a1a;
+  font-family: inherit;
+}
+
+.debt-card-edit-form input:focus,
+.debt-card-edit-form select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.debt-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.debt-card-actions .debt-btn-edit,
+.debt-card-actions .debt-btn-delete,
+.debt-card-actions .debt-btn-save,
+.debt-card-actions .debt-btn-cancel,
+.debt-card-actions .debt-btn-partial-pay {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.debt-card-actions .debt-btn-edit {
+  background: #3b82f6;
+  color: white;
+}
+
+.debt-card-actions .debt-btn-edit:hover {
+  background: #2563eb;
+}
+
+.debt-card-actions .debt-btn-delete {
+  background: #ef4444;
+  color: white;
+}
+
+.debt-card-actions .debt-btn-delete:hover {
+  background: #dc2626;
+}
+
+.debt-card-actions .debt-btn-save {
+  background: #10b981;
+  color: white;
+}
+
+.debt-card-actions .debt-btn-save:hover {
+  background: #059669;
+}
+
+.debt-card-actions .debt-btn-cancel {
+  background: #6b7280;
+  color: white;
+}
+
+.debt-card-actions .debt-btn-cancel:hover {
+  background: #4b5563;
+}
+
+.debt-card-actions .debt-btn-partial-pay {
+  background: #d4a574;
+  color: white;
+}
+
+.debt-card-actions .debt-btn-partial-pay:hover {
+  background: #c19154;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+@media (max-width: 1024px) {
+  .debt-table {
+    font-size: 0.9rem;
+  }
+
+  .debt-table th,
+  .debt-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .debt-table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Hide desktop table, show mobile cards */
+  .debt-table.desktop-view {
+    display: none;
+  }
+
+  .debt-cards.mobile-view {
+    display: flex;
+  }
+
+  .debt-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .debt-card-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .debt-card-value {
+    text-align: left;
+    margin-left: 0;
+    margin-top: 0.25rem;
+  }
+
+  .debt-card-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .debt-card-actions .debt-btn-edit,
+  .debt-card-actions .debt-btn-delete,
+  .debt-card-actions .debt-btn-save,
+  .debt-card-actions .debt-btn-cancel {
+    width: 100%;
+  }
+
+  .debt-card-edit-form {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .debt-card {
+    border-radius: 8px;
+  }
+}

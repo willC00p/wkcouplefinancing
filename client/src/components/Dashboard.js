@@ -153,151 +153,66 @@ const Dashboard = ({ refreshTrigger }) => {
 
   const COLORS = ['#10b981', '#f59e0b', '#ef4444'];
 
+  // Get category icons for personal expenses
+  const categoryIcons = {
+    'food': '🍽️',
+    'bills': '📄',
+    'misc': '📦',
+    'transport': '🚗',
+    'entertainment': '🎬',
+    'health': '⚕️',
+    'utilities': '💡',
+    'other': '📌'
+  };
+
   return (
     <div className="dashboard">
       <div className="dashboard-header">
         <div>
-          <h2>Financial Overview</h2>
-          <p className="subtitle">Real-time tracking of expenses and contributions</p>
+          <h2>💰 Financial Overview</h2>
+          <p className="subtitle">Complete view of all your finances</p>
         </div>
         <button onClick={fetchDashboard} className="refresh-btn" title="Refresh">
           <BiRefresh size={22} />
         </button>
       </div>
 
-      {/* Key Metrics */}
+      {/* Combined Summary Cards */}
       <div className="summary-cards">
-        <div className="metric-card">
-          <div className="metric-icon total">
-            <FiClock size={24} />
-          </div>
+        <div className="metric-card debts-total">
+          <div className="metric-icon">🤝</div>
           <div className="metric-content">
-            <p className="metric-label">Total Expenses</p>
-            <p className="metric-value">{formatCurrency(summary.overallSummary.totalExpenses)}</p>
+            <p className="metric-label">Shared Debts (UTANG)</p>
+            <p className="metric-value">{formatCurrency(summary.expenses.totalPaidAmount + summary.expenses.totalPartialAmount + summary.expenses.totalUnpaidAmount)}</p>
             <p className="metric-count">{summary.expenses.total} transactions</p>
           </div>
         </div>
 
-        <div className="metric-card">
-          <div className="metric-icon contribution">
-            <FiCheckCircle size={24} />
-          </div>
+        <div className="metric-card expenses-total">
+          <div className="metric-icon">💳</div>
           <div className="metric-content">
-            <p className="metric-label">Total Contributions</p>
-            <p className="metric-value">{formatCurrency(summary.overallSummary.totalContributions)}</p>
-            <p className="metric-count">{summary.contributions.total} contributions</p>
+            <p className="metric-label">Personal Expenses</p>
+            <p className="metric-value">{formatCurrency(summary.expenses.fromExpenseTracker?.total || 0)}</p>
+            <p className="metric-count">{summary.expenses.fromExpenseTracker?.count || 0} transactions</p>
           </div>
         </div>
 
-        <div className="metric-card alert">
-          <div className="metric-icon outstanding">
-            <FiAlertCircle size={24} />
-          </div>
+        <div className="metric-card combined-total">
+          <div className="metric-icon">📊</div>
           <div className="metric-content">
-            <p className="metric-label">Outstanding Amount</p>
-            <p className="metric-value">{formatCurrency(summary.overallSummary.totalOutstanding)}</p>
-            <p className="metric-count">Needs attention</p>
+            <p className="metric-label">Combined Total</p>
+            <p className="metric-value">{formatCurrency((summary.expenses.totalPaidAmount + summary.expenses.totalPartialAmount + summary.expenses.totalUnpaidAmount) + (summary.expenses.fromExpenseTracker?.total || 0))}</p>
+            <p className="metric-count">Overall spending</p>
           </div>
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="charts-section">
-        <div className="chart-container">
-          <h3>Expense Amount Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={statusChartData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {COLORS.map((color, index) => (
-                  <Cell key={`cell-${index}`} fill={color} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(value) => formatCurrency(value)} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="chart-container">
-          <h3>Expense Count by Status</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={expenseCountData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip
-                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
-              />
-              <Bar dataKey="count" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {expensesByPayer.length > 0 && (
-          <div className="chart-container">
-            <h3>Expenses by Payer</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={expensesByPayer}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {expensesByPayer.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value) => formatCurrency(value)} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-
-        {contributionsByPayer.length > 0 && (
-          <div className="chart-container">
-            <h3>Contributions by Payer</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={contributionsByPayer}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {contributionsByPayer.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value) => formatCurrency(value)} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </div>
-
-      {/* Expenses Summary */}
-      <div className="section">
-        <h3>Shared Expenses</h3>
+      {/* Shared Debts (UTANG) Summary */}
+      <div className="section debts-section">
+        <h3>🤝 UTANG (Shared Debts)</h3>
         <div className="status-cards">
           <div className="status-card paid">
-            <div className="status-icon"><FiCheckCircle size={20} /></div>
+            <div className="status-icon">✅</div>
             <div className="status-content">
               <p className="status-label">Paid</p>
               <p className="status-value">{summary.expenses.paid}</p>
@@ -305,7 +220,7 @@ const Dashboard = ({ refreshTrigger }) => {
             </div>
           </div>
           <div className="status-card partial">
-            <div className="status-icon"><FiClock size={20} /></div>
+            <div className="status-icon">⏳</div>
             <div className="status-content">
               <p className="status-label">Partial</p>
               <p className="status-value">{summary.expenses.partial}</p>
@@ -313,7 +228,7 @@ const Dashboard = ({ refreshTrigger }) => {
             </div>
           </div>
           <div className="status-card unpaid">
-            <div className="status-icon"><FiAlertCircle size={20} /></div>
+            <div className="status-icon">⚠️</div>
             <div className="status-content">
               <p className="status-label">Unpaid</p>
               <p className="status-value">{summary.expenses.unpaid}</p>
@@ -322,68 +237,6 @@ const Dashboard = ({ refreshTrigger }) => {
           </div>
         </div>
       </div>
-
-      {/* Personal Expenses */}
-      {summary.expenses.fromExpenseTracker && summary.expenses.fromExpenseTracker.total > 0 && (
-        <div className="section">
-          <h3>💳 Personal Expenses</h3>
-          <div className="status-cards">
-            <div className="status-card">
-              <div className="status-icon"><FiClock size={20} /></div>
-              <div className="status-content">
-                <p className="status-label">Total Spent</p>
-                <p className="status-value">{formatCurrency(summary.expenses.fromExpenseTracker.total)}</p>
-                <p className="status-count">{summary.expenses.fromExpenseTracker.count} transactions</p>
-              </div>
-            </div>
-            <div className="status-card">
-              <div className="status-icon"><FiCheckCircle size={20} /></div>
-              <div className="status-content">
-                <p className="status-label">Average per Transaction</p>
-                <p className="status-value">{formatCurrency(summary.expenses.fromExpenseTracker.total / (summary.expenses.fromExpenseTracker.count || 1))}</p>
-                <p className="status-count">Personal tracking</p>
-              </div>
-            </div>
-          </div>
-          
-          {Object.keys(summary.expenses.fromExpenseTracker.byCategory).length > 0 && (
-            <div className="trip-breakdown">
-              <h4>Expenses by Category</h4>
-              <div className="breakdown-list">
-                {Object.entries(summary.expenses.fromExpenseTracker.byCategory)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([category, amount]) => {
-                    const total = summary.expenses.fromExpenseTracker.total;
-                    const percentage = ((amount / total) * 100).toFixed(1);
-                    return (
-                      <div key={category} className="breakdown-item">
-                        <span className="classification">{category.charAt(0).toUpperCase() + category.slice(1)}</span>
-                        <div className="breakdown-right">
-                          <span className="breakdown-percentage">{percentage}%</span>
-                          <span className="amount">{formatCurrency(amount)}</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
-
-          {Object.keys(summary.expenses.fromExpenseTracker.byPayer).length > 0 && (
-            <div className="trip-breakdown">
-              <h4>Paid By</h4>
-              <div className="breakdown-list">
-                {Object.entries(summary.expenses.fromExpenseTracker.byPayer).map(([payer, amount]) => (
-                  <div key={payer} className="breakdown-item">
-                    <span className="payer">{payer}</span>
-                    <span className="amount">{formatCurrency(amount)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Contributions Summary */}
       <div className="section">
@@ -455,6 +308,95 @@ const Dashboard = ({ refreshTrigger }) => {
                     <span className="amount">{formatCurrency(amount)}</span>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Personal Expenses Details */}
+      {summary.expenses.fromExpenseTracker && summary.expenses.fromExpenseTracker.total > 0 && (
+        <div className="section expenses-section">
+          <h3>💳 Personal Expenses Breakdown</h3>
+          <div className="status-cards">
+            <div className="status-card">
+              <div className="status-icon">💵</div>
+              <div className="status-content">
+                <p className="status-label">Total Spent</p>
+                <p className="status-value">{formatCurrency(summary.expenses.fromExpenseTracker.total)}</p>
+                <p className="status-count">{summary.expenses.fromExpenseTracker.count} transactions</p>
+              </div>
+            </div>
+            <div className="status-card">
+              <div className="status-icon">📈</div>
+              <div className="status-content">
+                <p className="status-label">Average per Transaction</p>
+                <p className="status-value">{formatCurrency(summary.expenses.fromExpenseTracker.total / (summary.expenses.fromExpenseTracker.count || 1))}</p>
+                <p className="status-count">Avg spend</p>
+              </div>
+            </div>
+            <div className="status-card">
+              <div className="status-icon">👤</div>
+              <div className="status-content">
+                <p className="status-label">Top Spender</p>
+                <p className="status-value">
+                  {Object.entries(summary.expenses.fromExpenseTracker.byPayer).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A'}
+                </p>
+                <p className="status-count">
+                  {formatCurrency(Object.entries(summary.expenses.fromExpenseTracker.byPayer).sort((a, b) => b[1] - a[1])[0]?.[1] || 0)}
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {Object.keys(summary.expenses.fromExpenseTracker.byCategory).length > 0 && (
+            <div className="expenses-breakdown">
+              <h4>📊 Category Breakdown</h4>
+              <div className="breakdown-list-advanced">
+                {Object.entries(summary.expenses.fromExpenseTracker.byCategory)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([category, amount]) => {
+                    const total = summary.expenses.fromExpenseTracker.total;
+                    const percentage = ((amount / total) * 100).toFixed(1);
+                    return (
+                      <div key={category} className="breakdown-row-advanced">
+                        <div className="breakdown-left">
+                          <span className="category-icon">{categoryIcons[category] || '📌'}</span>
+                          <div className="category-details">
+                            <p className="category-name">{category.charAt(0).toUpperCase() + category.slice(1)}</p>
+                            <p className="category-pct">{percentage}%</p>
+                          </div>
+                        </div>
+                        <div className="breakdown-chart">
+                          <div className="progress-bar">
+                            <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
+                          </div>
+                        </div>
+                        <span className="category-amount">{formatCurrency(amount)}</span>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
+
+          {Object.keys(summary.expenses.fromExpenseTracker.byPayer).length > 0 && (
+            <div className="expenses-breakdown">
+              <h4>👤 Payment Distribution</h4>
+              <div className="payer-breakdown">
+                {Object.entries(summary.expenses.fromExpenseTracker.byPayer).map(([payer, amount]) => {
+                  const total = summary.expenses.fromExpenseTracker.total;
+                  const percentage = ((amount / total) * 100).toFixed(1);
+                  return (
+                    <div key={payer} className="payer-row">
+                      <span className="payer-name">{payer}</span>
+                      <div className="payer-bar">
+                        <div className="payer-fill" style={{ width: `${percentage}%` }}></div>
+                      </div>
+                      <span className="payer-amount">{formatCurrency(amount)}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

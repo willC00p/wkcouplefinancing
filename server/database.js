@@ -1,12 +1,21 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const dbPath = path.join(__dirname, 'finance.db');
+// Use persistent storage path on Render, or local during development
+const dbDir = process.env.DB_PATH || path.join(__dirname, 'data');
+const dbPath = path.join(dbDir, 'finance.db');
+
+// Ensure db directory exists
+const fs = require('fs');
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
+
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database:', err);
   } else {
-    console.log('Connected to SQLite database');
+    console.log(`Connected to SQLite database at ${dbPath}`);
   }
 });
 

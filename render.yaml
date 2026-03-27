@@ -6,11 +6,17 @@ services:
     plan: free
     buildCommand: cd server && npm install
     startCommand: cd server && node server.js
+    disk:
+      name: finance-db
+      mountPath: /app/server/persistent
+      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 5000
+      - key: DB_PATH
+        value: /app/server/persistent
       - key: FRONTEND_URL
         value: https://couple-finance-tracker.onrender.com
     healthCheckPath: /api/health

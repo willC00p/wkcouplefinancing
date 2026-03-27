@@ -1,0 +1,49 @@
+.debt-tracker {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.debt-tracker .tracker-header {
+  margin-bottom: 2rem;
+}
+
+.debt-tracker h2 {
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.debt-tracker .tracker-subtitle {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.debt-tracker .error-message {
+  background: #fef2f2;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #ef4444;
+}
+
+.debt-tracker .no-data {
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .debt-tracker {
+    padding: 1.5rem;
+  }
+
+  .debt-tracker h2 {
+    font-size: 1.5rem;
+  }
+}

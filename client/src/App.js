@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import './App.css';
-import { AiOutlineDashboard, AiOutlineCreditCard, AiOutlineTeam } from 'react-icons/ai';
+import { AiOutlineDashboard, AiOutlineCreditCard, AiOutlineTeam, AiOutlineShoppingCart } from 'react-icons/ai';
 import { FaPlane } from 'react-icons/fa';
 import Dashboard from './components/Dashboard';
-import ExpenseTracker from './components/ExpenseTracker';
+import DebtTracker from './components/DebtTracker';
+import ExpenseTrackerNew from './components/ExpenseTrackerNew';
 import ContributionTracker from './components/ContributionTracker';
 import TripTracker from './components/TripTracker';
 
@@ -34,6 +35,14 @@ function App() {
               onClick={() => setCurrentPage('expenses')}
               title="Expenses"
             >
+              <AiOutlineShoppingCart size={20} />
+              <span>Expenses</span>
+            </button>
+            <button 
+              className={currentPage === 'debts' ? 'nav-button active' : 'nav-button'}
+              onClick={() => setCurrentPage('debts')}
+              title="Debts"
+            >
               <AiOutlineCreditCard size={20} />
               <span>UTANG</span>
             </button>
@@ -60,7 +69,10 @@ function App() {
       <main className="app-main">
         {currentPage === 'dashboard' && <Dashboard refreshTrigger={refreshTrigger} />}
         {currentPage === 'expenses' && (
-          <ExpenseTracker onRefresh={handleRefresh} />
+          <ExpenseTrackerNew onRefresh={handleRefresh} />
+        )}
+        {currentPage === 'debts' && (
+          <DebtTracker onRefresh={handleRefresh} />
         )}
         {currentPage === 'contributions' && (
           <ContributionTracker onRefresh={handleRefresh} />

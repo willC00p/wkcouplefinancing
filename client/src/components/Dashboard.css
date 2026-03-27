@@ -711,6 +711,20 @@
   color: #10b981;
 }
 
+.breakdown-item .breakdown-right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.breakdown-item .breakdown-percentage {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.85rem;
+  min-width: 45px;
+  text-align: right;
+}
+
 @media (max-width: 768px) {
   .trip-breakdown {
     margin-top: 1rem;

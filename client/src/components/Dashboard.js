@@ -31,6 +31,33 @@ const Dashboard = ({ refreshTrigger }) => {
       const response = await fetch(`${API_URL}/api/dashboard/summary`);
       if (!response.ok) throw new Error('Failed to fetch dashboard');
       const data = await response.json();
+      
+      // Load expenses from localStorage
+      const storedExpenses = localStorage.getItem('expenses');
+      const expenses = storedExpenses ? JSON.parse(storedExpenses) : [];
+      
+      // Calculate additional metrics from expenses
+      const totalExpensesAmount = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+      const expensesByCategory = {};
+      const expensesByPayer = {};
+      
+      expenses.forEach(exp => {
+        expensesByCategory[exp.category] = (expensesByCategory[exp.category] || 0) + exp.amount;
+        expensesByPayer[exp.paidBy] = (expensesByPayer[exp.paidBy] || 0) + exp.amount;
+      });
+      
+      // Add expenses data to summary
+      data.expenses = {
+        ...data.expenses,
+        fromExpenseTracker: {
+          total: totalExpensesAmount,
+          count: expenses.length,
+          byCategory: expensesByCategory,
+          byPayer: expensesByPayer,
+          items: expenses
+        }
+      };
+      
       setSummary(data);
       setError(null);
     } catch (err) {
@@ -295,6 +322,68 @@ const Dashboard = ({ refreshTrigger }) => {
           </div>
         </div>
       </div>
+
+      {/* Personal Expenses */}
+      {summary.expenses.fromExpenseTracker && summary.expenses.fromExpenseTracker.total > 0 && (
+        <div className="section">
+          <h3>💳 Personal Expenses</h3>
+          <div className="status-cards">
+            <div className="status-card">
+              <div className="status-icon"><FiClock size={20} /></div>
+              <div className="status-content">
+                <p className="status-label">Total Spent</p>
+                <p className="status-value">{formatCurrency(summary.expenses.fromExpenseTracker.total)}</p>
+                <p className="status-count">{summary.expenses.fromExpenseTracker.count} transactions</p>
+              </div>
+            </div>
+            <div className="status-card">
+              <div className="status-icon"><FiCheckCircle size={20} /></div>
+              <div className="status-content">
+                <p className="status-label">Average per Transaction</p>
+                <p className="status-value">{formatCurrency(summary.expenses.fromExpenseTracker.total / (summary.expenses.fromExpenseTracker.count || 1))}</p>
+                <p className="status-count">Personal tracking</p>
+              </div>
+            </div>
+          </div>
+          
+          {Object.keys(summary.expenses.fromExpenseTracker.byCategory).length > 0 && (
+            <div className="trip-breakdown">
+              <h4>Expenses by Category</h4>
+              <div className="breakdown-list">
+                {Object.entries(summary.expenses.fromExpenseTracker.byCategory)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([category, amount]) => {
+                    const total = summary.expenses.fromExpenseTracker.total;
+                    const percentage = ((amount / total) * 100).toFixed(1);
+                    return (
+                      <div key={category} className="breakdown-item">
+                        <span className="classification">{category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                        <div className="breakdown-right">
+                          <span className="breakdown-percentage">{percentage}%</span>
+                          <span className="amount">{formatCurrency(amount)}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
+
+          {Object.keys(summary.expenses.fromExpenseTracker.byPayer).length > 0 && (
+            <div className="trip-breakdown">
+              <h4>Paid By</h4>
+              <div className="breakdown-list">
+                {Object.entries(summary.expenses.fromExpenseTracker.byPayer).map(([payer, amount]) => (
+                  <div key={payer} className="breakdown-item">
+                    <span className="payer">{payer}</span>
+                    <span className="amount">{formatCurrency(amount)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Contributions Summary */}
       <div className="section">

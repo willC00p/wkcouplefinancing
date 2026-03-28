@@ -41,11 +41,30 @@ Your app should be accessible at `http://localhost:5000`
    - Click "Deploy"
    - Render will automatically build and deploy both frontend and backend
 
-3. **Set Environment Variables**
+3. **Persistent Disk Setup (IMPORTANT for Free Tier)**
+   The `render.yaml` includes a persistent disk configuration that preserves your database across:
+   - Service restarts
+   - Redeploys/patches
+   - Free tier spindowns (15 min inactivity)
+   
+   **The disk is automatically configured in render.yaml:**
+   - **Mount Path**: `/var/data` (Render's standard persistent location)
+   - **Size**: 1GB (sufficient for most use cases)
+   - **Name**: `finance-db`
+   - **Environment Variable**: `DB_PATH=/var/data` (tells app where to store database)
+
+   **First-time Setup:**
+   1. Deploy normally via render.yaml
+   2. The persistent disk will be created automatically on first deploy
+   3. Your SQLite database will be stored at `/var/data/finance.db`
+   4. Verify in Logs that you see: `✓ Database schema initialized`
+
+4. **Set Environment Variables**
    On Render dashboard for your web service:
    - `NODE_ENV`: `production`
    - `FRONTEND_URL`: `https://your-service-name.onrender.com` (your actual Render URL)
    - `PORT`: `5000` (optional, Render will assign an available port)
+   - `DB_PATH`: `/var/data` (already set in render.yaml, verify it exists)
 
 ### Option B: Render.com Manual Deployment
 
@@ -138,9 +157,26 @@ git push heroku main
 - Check browser console for exact error URL
 
 ### Database queries fail
-- Ensure server has write permissions to `server/finance.db`
-- Check database file exists: `ls server/finance.db`
+- Ensure server has write permissions to persistent disk
+- Check database file exists at `/var/data/finance.db` in Render logs
 - Review `server/server.js` database initialization
+- **For data loss issues**: Check if persistent disk is mounted
+  - Go to Render Dashboard → Your Web Service → Disks
+  - Verify disk "finance-db" exists and is mounted at `/var/data`
+  - If no disk shows, you need to manually add it:
+    1. Go to Disks tab
+    2. Click "New Disk"
+    3. Name: `finance-db`
+    4. Mount path: `/var/data`
+    5. Size: 1GB
+    6. Save
+    7. Redeploy
+
+### Database being wiped on every deploy/downtime
+- **This is your current issue** - likely no persistent disk or incorrect mount path
+- **Solution**: Follow the "For data loss issues" section above
+- **Verify**: Check `/api/health` endpoint - look for `database.dbPath` showing `/var/data`
+- **Test**: Add a test debt/expense, wait 20 minutes for free tier spindown, refresh - data should persist
 
 ### Service won't start
 - Check `npm install` completed in both client and server

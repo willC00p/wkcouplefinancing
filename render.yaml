@@ -8,7 +8,7 @@ services:
     startCommand: cd server && node server.js
     disk:
       name: finance-db
-      mountPath: /app/server/persistent
+      mountPath: /var/data
       sizeGB: 1
     envVars:
       - key: NODE_ENV
@@ -16,9 +16,9 @@ services:
       - key: PORT
         value: 5000
       - key: DB_PATH
-        value: /app/server/persistent
+        value: /var/data
       - key: FRONTEND_URL
-        value: https://couple-finance-tracker.onrender.com
+        value: https://wkcouplefinancing.onrender.com
     healthCheckPath: /api/health
     autoDeployOnPush: true
     

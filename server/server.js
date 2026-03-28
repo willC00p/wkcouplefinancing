@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
-const { initializeDatabase } = require('./database');
+const { initializeDatabase, dbAll } = require('./database');
 const expensesRouter = require('./routes/expenses');
 const contributionsRouter = require('./routes/contributions');
 const dashboardRouter = require('./routes/dashboard');
@@ -39,8 +39,29 @@ app.use('/api/dashboard', dashboardRouter);
 app.use('/api/trips', tripsRouter);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'Server is running', environment: NODE_ENV });
+app.get('/api/health', async (req, res) => {
+  try {
+    const expenseCount = await dbAll('SELECT COUNT(*) as count FROM expenses');
+    const dbSize = await dbAll("SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()");
+    
+    res.json({
+      status: 'Server is running',
+      environment: NODE_ENV,
+      database: {
+        connected: true,
+        expenses: expenseCount[0]?.count || 0,
+        dbPath: process.env.DB_PATH || 'local',
+        sizeBytes: dbSize[0]?.size || 0
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'Server error',
+      environment: NODE_ENV,
+      database: { connected: false, error: err.message }
+    });
+  }
 });
 
 // Serve React app for all other routes (SPA routing)

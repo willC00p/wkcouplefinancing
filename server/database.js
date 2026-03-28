@@ -9,14 +9,30 @@ const dbPath = path.join(dbDir, 'finance.db');
 const fs = require('fs');
 if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
+  console.log(`Created database directory: ${dbDir}`);
+}
+
+// Check file permissions and disk space
+try {
+  const stats = fs.statSync(dbDir);
+  console.log(`Database directory permissions: ${stats.mode.toString(8)}`);
+} catch (err) {
+  console.warn(`Warning: Could not get directory stats: ${err.message}`);
 }
 
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database:', err);
   } else {
-    console.log(`Connected to SQLite database at ${dbPath}`);
+    console.log(`✓ Connected to SQLite database at ${dbPath}`);
   }
+});
+
+// Enable persistent connection
+db.configure('busyTimeout', 5000);
+db.run('PRAGMA journal_mode = WAL;', (err) => {
+  if (err) console.warn('Warning: Could not set WAL mode:', err);
+  else console.log('✓ Database WAL mode enabled for durability');
 });
 
 // Initialize database schema
@@ -100,7 +116,16 @@ const initializeDatabase = () => {
       )
     `);
 
-    console.log('Database schema initialized');
+    // Log success after a small delay to ensure tables are created
+    setTimeout(() => {
+      db.all("SELECT name FROM sqlite_master WHERE type='table'", (err, tables) => {
+        if (err) {
+          console.error('Error retrieving tables:', err);
+        } else {
+          console.log(`✓ Database schema initialized with ${tables.length} tables: ${tables.map(t => t.name).join(', ')}`);
+        }
+      });
+    }, 100);
   });
 };
 

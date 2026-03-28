@@ -4,7 +4,7 @@ import { BiSave } from 'react-icons/bi';
 import { AiOutlineClose } from 'react-icons/ai';
 import API_URL from '../config';
 
-const DebtForm = ({ onDebtAdded }) => {
+const DebtForm = ({ onDebtAdded, showModal, onClose }) => {
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
     particulars: '',
@@ -92,97 +92,101 @@ const DebtForm = ({ onDebtAdded }) => {
   };
 
   return (
-    <div className="debt-form">
-      <h3>Add New UTANG (Debt)</h3>
-      <form onSubmit={handleSubmit}>
-        <div className="form-row">
+    <form onSubmit={handleSubmit} className={showModal ? 'debt-form-modal' : 'debt-form'}>
+      <div className="form-row">
+        <div className="form-group">
+          <label>Date *</label>
+          <input
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Description (Particulars) *</label>
+          <input
+            type="text"
+            name="particulars"
+            value={formData.particulars}
+            onChange={handleChange}
+            placeholder="e.g., Grocery shopping"
+            required
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label>Deadline *</label>
+          <input
+            type="date"
+            name="deadline"
+            value={formData.deadline}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Amount *</label>
+          <input
+            type="number"
+            name="total_amount"
+            value={formData.total_amount}
+            onChange={handleChange}
+            placeholder="0.00"
+            step="0.01"
+            required
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label>Pay to*</label>
+          <select
+            name="pay_to"
+            value={formData.pay_to}
+            onChange={handleChange}
+            required
+          >
+            <option value="Wayne">Wayne</option>
+            <option value="Kyla">Kyla</option>
+            <option value="Others">Others</option>
+          </select>
+        </div>
+
+        {showCustomPayer && (
           <div className="form-group">
-            <label>Date *</label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Description (Particulars) *</label>
+            <label>Custom Name</label>
             <input
               type="text"
-              name="particulars"
-              value={formData.particulars}
+              name="custom_payer"
+              value={formData.custom_payer}
               onChange={handleChange}
-              placeholder="e.g., Grocery shopping"
-              required
+              placeholder="Enter name"
             />
           </div>
-        </div>
+        )}
+      </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label>Deadline *</label>
-            <input
-              type="date"
-              name="deadline"
-              value={formData.deadline}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Amount *</label>
-            <input
-              type="number"
-              name="total_amount"
-              value={formData.total_amount}
-              onChange={handleChange}
-              placeholder="0.00"
-              step="0.01"
-              required
-            />
-          </div>
-        </div>
-
-        <div className="form-row">
-          <div className="form-group">
-            <label>Pay to*</label>
-            <select
-              name="pay_to"
-              value={formData.pay_to}
-              onChange={handleChange}
-              required
-            >
-              <option value="Wayne">Wayne</option>
-              <option value="Kyla">Kyla</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
-
-          {showCustomPayer && (
-            <div className="form-group">
-              <label>Custom Name</label>
-              <input
-                type="text"
-                name="custom_payer"
-                value={formData.custom_payer}
-                onChange={handleChange}
-                placeholder="Enter name"
-              />
-            </div>
-          )}
-        </div>
-
+      <div className="form-actions">
         <button type="submit" disabled={loading} className="submit-btn">
           {loading ? 'Adding...' : <>
             <BiSave size={18} />
             <span>Add Debt</span>
           </>}
         </button>
+        {showModal && (
+          <button type="button" onClick={onClose} className="cancel-btn">
+            <span>Cancel</span>
+          </button>
+        )}
+      </div>
 
-        {message && <div className={`form-message ${message.includes('✅') ? 'success' : 'error'}`}>{message}</div>}
-      </form>
-    </div>
+      {message && <div className={`form-message ${message.includes('✅') ? 'success' : 'error'}`}>{message}</div>}
+    </form>
   );
 };
 
